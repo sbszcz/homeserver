@@ -1,0 +1,16 @@
+---
+- name: Ensure groups exists
+  ansible.builtin.group:
+    name: "{{ item }}"
+  loop:
+    - docker
+    - "{{ host_user }}"
+
+- name: Ensure operator is created and is in relevant groups
+  ansible.builtin.user:
+    name: "{{ host_user }}"
+    groups:
+      - sudo
+      - docker
+      - users
+    append: true

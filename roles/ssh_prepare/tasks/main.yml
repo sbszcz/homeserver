@@ -1,0 +1,14 @@
+---
+- name: Set authorized key for remote user
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    state: present
+    key: "{{ lookup('file', ssh_prepare_pub_key_location) }}"
+
+- name: Disable password authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+    state: present
+    regexp: "^#?PasswordAuthentication"
+    line: "PasswordAuthentication no"
+  notify: Restart ssh service

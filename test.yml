@@ -1,0 +1,8 @@
+---
+- name: Facts
+  hosts: all
+  become: true
+  tasks:
+    - name: Show me da facts
+      ansible.builtin.debug:
+        var: ansible_facts

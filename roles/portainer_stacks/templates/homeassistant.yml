@@ -1,0 +1,20 @@
+---
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:latest"
+    volumes:
+      - /container_data/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    networks:
+      - homie_homeassistant_network
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+networks:
+  homie_homeassistant_network:
+    driver: bridge

@@ -1,0 +1,17 @@
+---
+- name: Homeserver
+  hosts: all
+  become: true
+
+  roles:
+    - role: system_prepare
+
+    - role: ssh_prepare
+      vars:
+        ssh_prepare_pub_key_location: "{{ lookup('env','HOME')}}/.ssh/id_ed25519.pub"
+
+    - role: docker
+
+    - role: portainer
+
+    - role: portainer_stacks

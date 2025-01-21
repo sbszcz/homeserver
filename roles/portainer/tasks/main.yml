@@ -1,0 +1,33 @@
+---
+- name: Create portainer folder under '{{ container_data }}'
+  ansible.builtin.file:
+    path: "/{{ container_data }}/portainer"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: Create portainer container
+  community.docker.docker_container:
+    name: portainer
+    image: portainer/portainer-ce
+    state: started
+    restart_policy: always
+    published_ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /{{ container_data }}/portainer:/data
+
+- name: Create admin account in Portainer
+  ansible.builtin.uri:
+    url: "{{ portainer_api_url }}/api/users/admin/init"
+    method: POST
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+    body: '{"Username": "{{ portainer_admin_user }}", "Password": "{{ portainer_admin_pass }}", "Role": 1}'
+    status_code:
+      - 200
+      - 409 # if admin already exists

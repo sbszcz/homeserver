@@ -1,0 +1,4 @@
+all:
+  hosts:
+    homie:
+      ansible_host: homie

@@ -1,0 +1,32 @@
+---
+- name: Install docker
+  ansible.builtin.include_role:
+    name: geerlingguy.docker
+  # vars:
+  #   docker_apt_gpg_key: https://download.docker.com/linux/debian/gpg
+  #   docker_apt_repository: deb https://download.docker.com/linux/debian bookworm stable
+
+- name: Create the shared container data folder in the user home directry
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: Set shared container data directory permissions
+  ansible.builtin.file:
+    path: "/{{ container_data }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Mount shared container data folder to '/' from user folder"
+  tags: bind
+  ansible.posix.mount:
+    src: "/home/{{ host_user }}/{{ container_data }}"
+    path: /{{ container_data }}
+    fstype: none
+    opts: bind
+    state: mounted

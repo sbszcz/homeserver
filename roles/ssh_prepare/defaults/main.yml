@@ -1,0 +1,2 @@
+---
+ssh_prepare_pub_key_location: "/path/to/your/.ssh/id_rsa.pub"

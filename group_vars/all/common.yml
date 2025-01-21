@@ -1,0 +1,3 @@
+---
+container_data: container_data
+portainer_api_url: "http://{{ ansible_default_ipv4.address }}:9000"
