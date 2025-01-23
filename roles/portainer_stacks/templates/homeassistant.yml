@@ -9,12 +9,4 @@ services:
     restart: unless-stopped
     ports:
       - "8123:8123"
-    networks:
-      - homie_homeassistant_network
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
-
-networks:
-  homie_homeassistant_network:
-    driver: bridge
+    network_mode: host
