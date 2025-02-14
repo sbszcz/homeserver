@@ -1,4 +1,5 @@
 all:
   hosts:
     homie:
+      ansible_ssh_private_key_file: ~/.ssh/id_maintainer
       ansible_host: homie
