@@ -14,4 +14,6 @@
 
     - role: portainer
 
+    - role: pihole_prepare
+
     - role: portainer_stacks

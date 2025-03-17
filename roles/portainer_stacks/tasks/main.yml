@@ -15,3 +15,8 @@
       file: homeassistant.yml
       dirs:
         - config
+
+    - name: pihole
+      file: pihole.yml
+      dirs:
+        - dnsmasq

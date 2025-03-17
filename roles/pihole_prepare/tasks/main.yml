@@ -1,0 +1,24 @@
+---
+# Disable DNSStubListener and update resolv.conf
+- name: Modify resolved.conf to disable DNSStubListener
+  ansible.builtin.replace:
+    path: /etc/systemd/resolved.conf
+    regexp: "^#?DNSStubListener=.*"
+    replace: "DNSStubListener=no"
+    backup: true
+
+- name: Remove existing /etc/resolv.conf
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Create symlink for resolv.conf
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+
+- name: Restart systemd-resolved service
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted

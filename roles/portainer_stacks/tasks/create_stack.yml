@@ -42,7 +42,7 @@
   vars:
     response_data: "{{ get_stack_response.json }}"
 
-- name: "Setup folder '{{ container_data }}' for {{ stack_name }}"
+- name: "Setup folder '{{ container_data }}' for {{ stack_name }} stack"
   ansible.builtin.file:
     path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}"
     state: directory

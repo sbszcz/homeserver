@@ -15,5 +15,5 @@ My personal home server with ansible.
 # Execute main playbook
 
 ```bash
-~ ansible-playbook -i inventory.yml run.yaml --ask-become-pass --vault-pass-file vault-key.sh
+~ ansible-playbook -i inventory.yml run.yml --ask-become-pass --vault-pass-file vault-key.sh
 ```
