@@ -11,6 +11,12 @@ My personal home server with ansible.
   ```
 
 - obtain secrets.yaml and vault-key.sh from keepass
+- install dependencies
+  
+  ```bash
+  ~ ansible-galaxy install -r requirements.yml
+
+  ```
 
 # Execute main playbook
 

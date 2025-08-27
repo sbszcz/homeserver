@@ -1,0 +1,68 @@
+---
+####################################################
+# Preparating steps:
+# 
+# Disable DNSStubListener and update resolv.conf
+#
+####################################################
+- name: Modify resolved.conf to disable DNSStubListener
+  ansible.builtin.replace:
+    path: /etc/systemd/resolved.conf
+    regexp: "^#?DNSStubListener=.*"
+    replace: "DNSStubListener=no"
+    backup: true
+
+- name: Remove existing /etc/resolv.conf
+  ansible.builtin.file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Create symlink for resolv.conf
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+
+- name: Restart systemd-resolved service
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted
+
+####################################################
+# Installing pihole container
+# 
+#################################################### 
+- name: Authenticate and Check stack
+  ansible.builtin.include_role: 
+    name: portainer_stacks
+    tasks_from: authenticate_and_check_stack 
+
+- name: "Setup folder '{{ container_data }}' for stack"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  when: jwt_token is defined and stack_not_exists
+
+- name: "Setup sub folders"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - dnsmasq
+  loop_control:
+    loop_var: sub_directory
+  when: stack_not_exists
+
+- name: "Deploy {{ stack_name }}"
+  ansible.builtin.include_role: 
+    name: portainer_stacks
+    tasks_from: create_stack
+  vars:
+    stack_compose: "{{ lookup('ansible.builtin.template', 'pihole.yml') }}"
+     

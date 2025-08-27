@@ -1,10 +1,10 @@
 ---
 services:
   homeassistant:
-    container_name: homeassistant
+    container_name: {{ stack_name }}
     image: "ghcr.io/home-assistant/home-assistant:latest"
     volumes:
-      - /container_data/homeassistant/config:/config
+      - /{{ container_data }}/homeassistant/config:/config
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     ports:

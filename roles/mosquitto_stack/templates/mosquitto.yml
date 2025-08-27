@@ -1,0 +1,12 @@
+services:
+  mosquitto:
+    stdin_open: true
+    tty: true
+    ports:
+      - 1883:1883
+      - 9001:9001
+    restart: unless-stopped
+    container_name: mosquitto
+    volumes:
+      - /{{ container_data }}/mosquitto/config:/mosquitto/config:ro
+    image: eclipse-mosquitto
