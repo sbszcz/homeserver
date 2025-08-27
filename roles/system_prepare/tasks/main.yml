@@ -14,3 +14,37 @@
       - docker
       - users
     append: true
+
+- name: Install packages 
+  ansible.builtin.apt:
+    name:
+      - nfs-common
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Ensure NFS client services are enabled
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  loop:
+    - rpcbind
+  become: yes
+
+- name: "Ensure photos mount point exists"
+  ansible.builtin.file:
+    path: "/mnt/diskstation/photos"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: Mount NFS share with fail-safe options
+  ansible.posix.mount:
+    path: /mnt/diskstation/photos
+    src: "diskstation:/volume1/photo"
+    fstype: nfs
+    opts: "defaults,vers=3,nofail,soft,timeo=5,retry=1,bg"
+    state: mounted
+  become: yes

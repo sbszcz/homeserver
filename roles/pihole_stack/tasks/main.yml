@@ -65,4 +65,3 @@
     tasks_from: create_stack
   vars:
     stack_compose: "{{ lookup('ansible.builtin.template', 'pihole.yml') }}"
-     
