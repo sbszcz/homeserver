@@ -15,10 +15,14 @@ services:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
     volumes:
-      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
-      - /container_data/immich/library:/data
       - /etc/localtime:/etc/localtime:ro
       - /mnt/diskstation/photos:/mnt/photos
+      - /mnt/diskstation/photos/immich/upload:/data/upload
+      - /mnt/diskstation/photos/immich/library:/data/library
+      - /container_data/immich/library/thumbs:/data/thumbs
+      - /container_data/immich/library/profile:/data/profile      
+      - /container_data/immich/library/encoded-video:/data/encoded-video
+      - /container_data/immich/library/backups:/data/backups
     ports:
       - '2283:2283'
     environment:
