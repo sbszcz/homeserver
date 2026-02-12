@@ -1,3 +1,7 @@
 [tools]
 ansible = "13.3.0"
 pipx = "1.8.0"
+
+[tasks.ping]
+description = 'Ping my homeserver'
+run = 'ansible all -i inventory.yml -m ping --vault-pass-file vault-key.sh --private-key=~/.ssh/id_maintainer'
