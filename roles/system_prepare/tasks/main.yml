@@ -15,22 +15,22 @@
       - users
     append: true
 
-- name: Install packages 
+- name: Install packages
   ansible.builtin.apt:
     name:
       - nfs-common
     state: present
-    update_cache: yes
-  become: yes
+    update_cache: true
+  become: true
 
 - name: Ensure NFS client services are enabled
   ansible.builtin.systemd:
     name: "{{ item }}"
-    enabled: yes
+    enabled: true
     state: started
   loop:
     - rpcbind
-  become: yes
+  become: true
 
 - name: "Ensure photos mount point exists"
   ansible.builtin.file:
@@ -55,7 +55,7 @@
     fstype: nfs
     opts: "defaults,vers=3,nofail,soft,timeo=5,retry=1,bg"
     state: mounted
-  become: yes
+  become: true
 
 - name: Mount NFS diskstation immich folder
   ansible.posix.mount:
@@ -64,4 +64,4 @@
     fstype: nfs
     opts: "defaults,vers=3,nofail,soft,timeo=5,retry=1,bg"
     state: mounted
-  become: yes
+  become: true

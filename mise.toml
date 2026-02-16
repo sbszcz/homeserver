@@ -5,3 +5,8 @@ pipx = "1.8.0"
 [tasks.ping]
 description = 'Ping my homeserver'
 run = 'ansible all -i inventory.yml -m ping --vault-pass-file vault-key.sh --private-key=~/.ssh/id_maintainer'
+
+[tasks.run-playbook]
+alias = 'rp'
+description = 'Run playbook'
+run = 'ansible-playbook -i inventory.yml run.yml --ask-become-pass --vault-pass-file vault-key.sh'
