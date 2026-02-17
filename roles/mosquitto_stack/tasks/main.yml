@@ -1,10 +1,10 @@
 ---
 - name: Authenticate and Check stack
-  ansible.builtin.include_role: 
+  ansible.builtin.include_role:
     name: portainer_stacks
     tasks_from: authenticate_and_check_stack
 
-- name: "Setup folder '{{ container_data }}' for stack"
+- name: "Setup folder for stack"
   ansible.builtin.file:
     path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}"
     state: directory
@@ -44,4 +44,3 @@
     tasks_from: create_stack
   vars:
     stack_compose: "{{ lookup('ansible.builtin.template', 'mosquitto.yml') }}"
-     

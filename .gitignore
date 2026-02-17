@@ -1,3 +1,4 @@
 **/secrets.yml
 vault-key.sh
 .ansible/
+AGENTS.md

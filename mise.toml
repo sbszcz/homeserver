@@ -10,3 +10,21 @@ run = 'ansible all -i inventory.yml -m ping --vault-pass-file vault-key.sh --pri
 alias = 'rp'
 description = 'Run playbook'
 run = 'ansible-playbook -i inventory.yml run.yml --ask-become-pass --vault-pass-file vault-key.sh'
+
+[tasks.syntax-check]
+alias = 'check'
+description = 'Check playbook syntax'
+run = 'ansible-playbook -i inventory.yml run.yml --syntax-check'
+
+[tasks.lint]
+description = 'Lint playbooks with ansible-lint'
+run = 'pipx run ansible-lint run.yml test.yml'
+
+[tasks.dry-run]
+alias = 'dry'
+description = 'Dry run playbook (check mode)'
+run = 'ansible-playbook -i inventory.yml run.yml --check --ask-become-pass --vault-pass-file vault-key.sh'
+
+[tasks.facts]
+description = 'Show ansible facts'
+run = 'ansible-playbook -i inventory.yml test.yml --ask-become-pass --vault-pass-file vault-key.sh'

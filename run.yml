@@ -18,4 +18,3 @@
     - role: pihole_stack
     - role: mosquitto_stack
     - role: immich_stack
-

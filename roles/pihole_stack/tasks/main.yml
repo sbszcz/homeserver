@@ -1,9 +1,8 @@
 ---
 ####################################################
 # Preparating steps:
-# 
-# Disable DNSStubListener and update resolv.conf
 #
+# Disable DNSStubListener and update resolv.conf
 ####################################################
 - name: Modify resolved.conf to disable DNSStubListener
   ansible.builtin.replace:
@@ -30,14 +29,13 @@
 
 ####################################################
 # Installing pihole container
-# 
-#################################################### 
+####################################################
 - name: Authenticate and Check stack
-  ansible.builtin.include_role: 
+  ansible.builtin.include_role:
     name: portainer_stacks
-    tasks_from: authenticate_and_check_stack 
+    tasks_from: authenticate_and_check_stack
 
-- name: "Setup folder '{{ container_data }}' for stack"
+- name: "Setup folder for stack"
   ansible.builtin.file:
     path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}"
     state: directory
@@ -60,7 +58,7 @@
   when: stack_not_exists
 
 - name: "Deploy {{ stack_name }}"
-  ansible.builtin.include_role: 
+  ansible.builtin.include_role:
     name: portainer_stacks
     tasks_from: create_stack
   vars:

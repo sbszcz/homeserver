@@ -1,10 +1,10 @@
 ---
 - name: Authenticate and Check stack
-  ansible.builtin.include_role: 
+  ansible.builtin.include_role:
     name: portainer_stacks
     tasks_from: authenticate_and_check_stack
 
-- name: "Setup folder '{{ container_data }}' for stack"
+- name: "Setup folder for stack"
   ansible.builtin.file:
     path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}"
     state: directory
@@ -36,4 +36,3 @@
     stack_compose_env:
       - name: DB_PASSWORD
         value: "{{ immich_db_password }}"
-     
