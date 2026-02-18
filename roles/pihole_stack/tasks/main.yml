@@ -10,22 +10,14 @@
     regexp: "^#?DNSStubListener=.*"
     replace: "DNSStubListener=no"
     backup: true
+  notify: Restart systemd-resolved
 
-- name: Remove existing /etc/resolv.conf
-  ansible.builtin.file:
-    path: /etc/resolv.conf
-    state: absent
-
-- name: Create symlink for resolv.conf
+- name: Ensure resolv.conf symlink exists
   ansible.builtin.file:
     src: /run/systemd/resolve/resolv.conf
     dest: /etc/resolv.conf
     state: link
-
-- name: Restart systemd-resolved service
-  ansible.builtin.systemd:
-    name: systemd-resolved
-    state: restarted
+  notify: Restart systemd-resolved
 
 ####################################################
 # Installing pihole container

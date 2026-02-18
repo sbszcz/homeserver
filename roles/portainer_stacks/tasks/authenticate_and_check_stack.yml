@@ -23,21 +23,23 @@
     jwt_token: "{{ auth_response.json.jwt }}"
   when: auth_response.status == 200
 
-- name: "Get stack information from Portainer for {{ stack_name }}"
-  ansible.builtin.uri:
-    url: "{{ portainer_api_url }}/api/stacks"
-    method: GET
-    headers:
-      Authorization: "Bearer {{ jwt_token }}"
-  register: get_stack_response
-  when: jwt_token is defined
-
-- name: "Debug get_stack_response {{ stack_name }}"
-  ansible.builtin.debug:
-    var: get_stack_response
+- name: Get stack information
+  block:
+    - name: "Get stack information from Portainer for {{ stack_name }}"
+      ansible.builtin.uri:
+        url: "{{ portainer_api_url }}/api/stacks"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ jwt_token }}"
+      register: get_stack_response
+      when: jwt_token is defined
+  rescue:
+    - name: "Debug get_stack_response {{ stack_name }}"
+      ansible.builtin.debug:
+        var: get_stack_response
 
 - name: "Check if the stack exists {{ stack_name }}"
   ansible.builtin.set_fact:
-    stack_not_exists: "{{ response_data | json_query('[?Name == `'+ stack_name +'`]') | length <= 0 }}"
+    stack_not_exists: "{{ response_data | json_query('[?Name == `' + stack_name + '`]') | length <= 0 }}"
   vars:
     response_data: "{{ get_stack_response.json }}"

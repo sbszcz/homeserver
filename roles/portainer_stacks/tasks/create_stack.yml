@@ -12,7 +12,7 @@
       name: "{{ stack_name }}"
       fromAppTemplate: false
       StackFileContent: "{{ stack_compose }}"
-      env: "{{ stack_compose_env  | default(omit) }}"     
+      env: "{{ stack_compose_env | default(omit) }}"
   register: create_stack_response
   when: jwt_token is defined and stack_not_exists
 

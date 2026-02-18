@@ -11,19 +11,16 @@ alias = 'rp'
 description = 'Run playbook'
 run = 'ansible-playbook -i inventory.yml run.yml --ask-become-pass --vault-pass-file vault-key.sh'
 
-[tasks.syntax-check]
-alias = 'check'
-description = 'Check playbook syntax'
-run = 'ansible-playbook -i inventory.yml run.yml --syntax-check'
-
 [tasks.lint]
 description = 'Lint playbooks with ansible-lint'
-run = 'pipx run ansible-lint run.yml test.yml'
+run = 'pipx run ansible-lint'
 
-[tasks.dry-run]
-alias = 'dry'
-description = 'Dry run playbook (check mode)'
-run = 'ansible-playbook -i inventory.yml run.yml --check --ask-become-pass --vault-pass-file vault-key.sh'
+# check mode does not work here because ansible.builtin.uri response does not contain status field
+# TODO: find check mode compatible way to handle this
+# [tasks.dry-run]
+# alias = 'dry'
+# description = 'Dry run playbook (check mode)'
+# run = 'ansible-playbook -i inventory.yml run.yml --check --ask-become-pass --vault-pass-file vault-key.sh'
 
 [tasks.facts]
 description = 'Show ansible facts'
