@@ -1,0 +1,67 @@
+---
+- name: Authenticate and Check stack
+  ansible.builtin.include_role:
+    name: portainer_stacks
+    tasks_from: authenticate_and_check_stack
+
+####################################################
+# Creating Jessis folders
+####################################################
+- name: "Setup folder for syncthing jessi"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/syncthing/jessi"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  when: jwt_token is defined and stack_not_exists
+
+- name: "Setup sub folders for syncthing jessi"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/syncthing/jessi/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - config
+    - data
+  loop_control:
+    loop_var: sub_directory
+  when: stack_not_exists
+
+####################################################
+# Creating Bastis folders
+####################################################
+- name: "Setup folder for syncthing basti"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/syncthing/basti"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  when: jwt_token is defined and stack_not_exists
+
+- name: "Setup sub folders for syncthing basti"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/syncthing/basti/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - config
+    - data
+  loop_control:
+    loop_var: sub_directory
+  when: stack_not_exists
+
+####################################################
+# Deploy stack
+####################################################
+- name: "Deploy {{ stack_name }}"
+  ansible.builtin.include_role:
+    name: portainer_stacks
+    tasks_from: create_stack
+  vars:
+    stack_compose: "{{ lookup('ansible.builtin.template', 'syncthing.yml') }}"

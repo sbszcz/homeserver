@@ -1,0 +1,34 @@
+services:
+  syncthing-jessi:
+    container_name: syncthing-jessi
+    image: lscr.io/linuxserver/syncthing:latest
+    ports:
+      - 8385:8384
+      - 22001:22000/tcp
+      - 22001:22000/udp
+      - 21028:21027/udp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ="Europe/Berlin"
+    volumes:
+      - "/container_data/syncthing/jessi/config:/config:rw"
+      - "/container_data/syncthing/jessi/data:/data:rw"
+    restart: unless-stopped
+
+  syncthing-basti:
+    container_name: syncthing-basti
+    image: lscr.io/linuxserver/syncthing:latest
+    ports:
+      - 8386:8384
+      - 22002:22000/tcp
+      - 22002:22000/udp
+      - 21029:21027/udp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ="Europe/Berlin"
+    volumes:
+      - "/container_data/syncthing/basti/config:/config:rw"
+      - "/container_data/syncthing/basti/data:/data:rw"
+    restart: unless-stopped
