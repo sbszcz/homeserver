@@ -1,0 +1,42 @@
+# source: https://github.com/paperless-ngx/paperless-ngx/blob/dev/docker/compose/docker-compose.portainer.yml
+services:
+  broker:
+    image: docker.io/library/redis:8
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+  db:
+    image: docker.io/library/postgres:18
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+    ports:
+      - "8010:8000"
+    volumes:
+      - data:/usr/src/paperless/data
+      - /mnt/diskstation/paperless/media:/usr/src/paperless/media
+      - /container_data/export:/usr/src/paperless/export
+      - /container_data/paperless/consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      USERMAP_UID: 1001
+      USERMAP_GID: 1001
+      PAPERLESS_TIME_ZONE: "Europe/Berlin"
+      PAPERLESS_OCR_LANGUAGE: deu
+      PAPERLESS_CONSUMER_INOTIFY_DELAY: 15
+      PAPERLESS_FILENAME_FORMAT: "{created_year}/{title}"
+volumes:
+  data:
+  pgdata:
+  redisdata:

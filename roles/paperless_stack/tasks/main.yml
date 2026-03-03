@@ -1,0 +1,69 @@
+---
+- name: Create paperless group
+  ansible.builtin.group:
+    name: paperless
+    gid: 1001
+
+- name: Create paperless user
+  ansible.builtin.user:
+    name: paperless
+    uid: 1001
+    group: paperless
+    create_home: false
+    system: false
+
+- name: "Ensure paperless mount point exists"
+  ansible.builtin.file:
+    path: "/mnt/diskstation/paperless"
+    state: directory
+    owner: paperless
+    group: paperless
+    mode: "0755"
+
+- name: Mount NFS diskstation paperless folder
+  ansible.posix.mount:
+    path: /mnt/diskstation/paperless
+    src: "diskstation:/volume1/paperless"
+    fstype: nfs
+    opts: "rw,hard,_netdev,noatime,vers=3,x-systemd.automount,x-systemd.idle-timeout=600,timeo=600,retrans=10"
+    state: mounted
+  become: true
+  notify: Reload systemd
+
+####################################################
+# Check if stack exitst and install if not
+####################################################
+- name: Authenticate and Check stack
+  ansible.builtin.include_role:
+    name: portainer_stacks
+    tasks_from: authenticate_and_check_stack
+
+- name: "Setup folder for stack"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  when: jwt_token is defined and stack_not_exists
+
+- name: "Setup sub folders"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/{{ stack_name }}/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - consume
+    - export
+  loop_control:
+    loop_var: sub_directory
+  when: stack_not_exists
+
+- name: "Deploy {{ stack_name }}"
+  ansible.builtin.include_role:
+    name: portainer_stacks
+    tasks_from: create_stack
+  vars:
+    stack_compose: "{{ lookup('ansible.builtin.template', 'paperless.yml') }}"
