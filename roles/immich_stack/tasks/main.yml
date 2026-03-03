@@ -1,4 +1,45 @@
 ---
+####################################################
+# Preparating steps:
+#
+# Ensure mount points exists
+####################################################
+- name: "Ensure photos mount point exists"
+  ansible.builtin.file:
+    path: "/mnt/diskstation/photos"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Ensure immich mount point exists"
+  ansible.builtin.file:
+    path: "/mnt/diskstation/immich"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: Mount NFS diskstation photos folder
+  ansible.posix.mount:
+    path: /mnt/diskstation/photos
+    src: "diskstation:/volume1/photo"
+    fstype: nfs
+    opts: "defaults,vers=3,nofail,soft,timeo=5,retry=1,bg"
+    state: mounted
+  become: true
+
+- name: Mount NFS diskstation immich folder
+  ansible.posix.mount:
+    path: /mnt/diskstation/immich
+    src: "diskstation:/volume1/immich"
+    fstype: nfs
+    opts: "defaults,vers=3,nofail,soft,timeo=5,retry=1,bg"
+    state: mounted
+  become: true
+####################################################
+# Check if stack exists and install
+####################################################
 - name: Authenticate and Check stack
   ansible.builtin.include_role:
     name: portainer_stacks
