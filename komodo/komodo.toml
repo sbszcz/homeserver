@@ -1,5 +1,6 @@
 [[stack]]
 name = "echo-test"
+deploy = true
 [stack.config]
 server = "homie"
 poll_for_updates = true
