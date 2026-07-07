@@ -13,6 +13,7 @@
     - role: docker
 
     - role: portainer
+    - role: komodo
 
     - role: homeassistant_stack
     - role: pihole_stack

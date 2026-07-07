@@ -1,0 +1,50 @@
+---
+- name: Create komodo base folder under '{{ container_data }}'
+  ansible.builtin.file:
+    path: "{{ komodo_data_dir }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: Create komodo sub folders
+  ansible.builtin.file:
+    path: "{{ komodo_data_dir }}/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - keys
+    - backups
+    - mongo/data
+    - mongo/config
+    - stacks
+  loop_control:
+    loop_var: sub_directory
+
+- name: Template komodo compose file
+  ansible.builtin.template:
+    src: compose.yaml
+    dest: "{{ komodo_data_dir }}/compose.yaml"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0644"
+
+- name: Template komodo compose env file
+  ansible.builtin.template:
+    src: compose.env
+    dest: "{{ komodo_data_dir }}/compose.env"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0600"
+
+- name: Deploy komodo stack
+  community.docker.docker_compose_v2:
+    project_name: komodo
+    project_src: "{{ komodo_data_dir }}"
+    files:
+      - compose.yaml
+    env_files:
+      - compose.env
+    state: present
