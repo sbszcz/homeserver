@@ -1,3 +1,10 @@
+[[repo]]
+name = "homeserver"
+[repo.config]
+server = "homie"
+git_account = "sbszcz"
+repo = "sbszcz/homeserver"
+
 [[stack]]
 name = "echo-test"
 deploy = true
