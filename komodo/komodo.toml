@@ -1,0 +1,14 @@
+[[stack]]
+name = "echo-test"
+[stack.config]
+server = "homie"
+repo = "<user>/homeserver"
+git_provider = "github.com"
+branch = "main"
+run_directory = "komodo/stacks/echo-test"
+file_paths = ["compose.yaml"]
+webhook_enabled = true
+poll_for_updates = true
+environment = """
+TZ=Europe/Berlin
+"""

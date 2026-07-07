@@ -1,0 +1,27 @@
+---
+services:
+  echo:
+    image: alpine:3
+    container_name: echo-test
+    restart: unless-stopped
+    env_file:
+      - echo-test.env
+    environment:
+      PLAIN_VAR: "hallo-welt"
+      FROM_KOMODO_ENV: "${EXAMPLE_ENV_VAR}"
+      EXAMPLE_SECRET: "${EXAMPLE_SECRET}"
+    command:
+      - sh
+      - -c
+      - |
+        echo "=== Echo-Test Stack gestartet ==="
+        echo "PLAIN_VAR       = $$PLAIN_VAR"
+        echo "FROM_KOMODO_ENV = $$FROM_KOMODO_ENV"
+        echo "EXAMPLE_SECRET  = $$EXAMPLE_SECRET"
+        echo "FROM_ENV_FILE   = $$FROM_ENV_FILE"
+        echo "--- Komplettes Environment ---"
+        env | sort
+        while true; do
+          echo "[$$(date '+%H:%M:%S')] ping ..."
+          sleep 10
+        done
