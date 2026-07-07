@@ -7,7 +7,7 @@ services:
     env_file:
       - echo-test.env
     environment:
-      PLAIN_VAR: "hallo-welt"
+      PLAIN_VAR: "pain-var-compose-yaml"
       FROM_KOMODO_ENV: "${EXAMPLE_ENV_VAR}"
       EXAMPLE_SECRET: "${EXAMPLE_SECRET}"
     command:

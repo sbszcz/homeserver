@@ -2,7 +2,7 @@
 name = "echo-test"
 [stack.config]
 server = "homie"
-repo = "<user>/homeserver"
+repo = "sbszcz/homeserver"
 git_provider = "github.com"
 branch = "main"
 run_directory = "komodo/stacks/echo-test"
