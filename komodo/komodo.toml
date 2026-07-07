@@ -4,6 +4,7 @@ name = "echo-test"
 server = "homie"
 repo = "sbszcz/homeserver"
 git_provider = "github.com"
+git_account = "sbszcz"
 branch = "main"
 run_directory = "komodo/stacks/echo-test"
 file_paths = ["compose.yaml"]
