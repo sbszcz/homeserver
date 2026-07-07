@@ -1,0 +1,91 @@
+---
+- name: "Wait for Komodo API to become available"
+  ansible.builtin.uri:
+    url: "{{ komodo_api_url }}/version"
+    method: GET
+    status_code: 200
+  register: komodo_health
+  until: komodo_health.status == 200
+  retries: 10
+  delay: 3
+  changed_when: false
+
+- name: "Authenticate with Komodo API"
+  ansible.builtin.uri:
+    url: "{{ komodo_api_url }}/auth/login"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body:
+      type: "LoginLocalUser"
+      params:
+        username: "{{ komodo_init_admin_username }}"
+        password: "{{ komodo_init_admin_password }}"
+  register: komodo_auth_response
+  until: komodo_auth_response.status == 200
+  retries: 10
+  delay: 3
+  changed_when: false
+
+- name: "Get JWT token from Komodo authentication response"
+  ansible.builtin.set_fact:
+    komodo_jwt_token: "{{ komodo_auth_response.json.data.jwt }}"
+
+- name: "List existing Komodo resource syncs"
+  ansible.builtin.uri:
+    url: "{{ komodo_api_url }}/read"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer {{ komodo_jwt_token }}"
+    body_format: json
+    body:
+      type: "ListResourceSyncs"
+      params: {}
+  register: komodo_sync_list
+  changed_when: false
+
+- name: "Check whether the Komodo resource sync exists: {{ komodo_sync_name }}"
+  ansible.builtin.set_fact:
+    komodo_sync_not_exists: "{{ komodo_sync_list.json | json_query('[?name == `' + komodo_sync_name + '`]') | length <= 0 }}"
+
+- name: "Create Komodo resource sync '{{ komodo_sync_name }}'"
+  ansible.builtin.uri:
+    url: "{{ komodo_api_url }}/write"
+    method: POST
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer {{ komodo_jwt_token }}"
+    body_format: json
+    body:
+      type: "CreateResourceSync"
+      params:
+        name: "{{ komodo_sync_name }}"
+        config:
+          git_provider: "{{ komodo_git_provider }}"
+          git_account: "{{ komodo_git_account }}"
+          repo: "{{ komodo_git_repo }}"
+          branch: "{{ komodo_git_branch }}"
+          resource_path:
+            - "{{ komodo_sync_resource_path }}"
+  register: komodo_sync_create
+  failed_when: komodo_sync_create.status not in [200, 201]
+  when: komodo_sync_not_exists
+
+- name: "Run Komodo resource sync '{{ komodo_sync_name }}'"
+  ansible.builtin.uri:
+    url: "{{ komodo_api_url }}/execute"
+    method: POST
+    timeout: 120 # cloning the repo and creating resources might take some time
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Bearer {{ komodo_jwt_token }}"
+    body_format: json
+    body:
+      type: "RunSync"
+      params:
+        sync: "{{ komodo_sync_name }}"
+  register: komodo_sync_run
+  failed_when: komodo_sync_run.status != 200
+  when: komodo_sync_not_exists

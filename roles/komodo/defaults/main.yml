@@ -5,3 +5,11 @@ komodo_data_dir: "/{{ container_data }}/komodo"
 komodo_root_directory: "/{{ container_data }}/komodo"
 komodo_title: "Komodo"
 komodo_timezone: "Europe/Berlin"
+
+# Git-Provider / Bootstrap der ResourceSync
+komodo_git_provider: "github.com"
+komodo_git_account: "sbszcz"
+komodo_git_repo: "sbszcz/homeserver"
+komodo_git_branch: "main"
+komodo_sync_name: "homeserver"
+komodo_sync_resource_path: "komodo/komodo.toml"

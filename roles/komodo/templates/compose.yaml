@@ -27,6 +27,7 @@ services:
     volumes:
       - {{ komodo_data_dir }}/keys:/config/keys
       - {{ komodo_data_dir }}/backups:/backups
+      - {{ komodo_data_dir }}/core.config.toml:/config/config.toml
 
   periphery:
     image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-2}

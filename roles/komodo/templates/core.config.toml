@@ -1,0 +1,13 @@
+## Komodo Core Konfigurationsdatei (gemountet nach /config/config.toml).
+## Wird zusaetzlich zu den Environment-Variablen aus compose.env geladen.
+## Environment-Variablen haben Vorrang vor Werten in dieser Datei.
+##
+## Zweck: Git-Provider-Accounts koennen NICHT ueber Environment-Variablen
+## gesetzt werden und muessen daher hier hinterlegt werden. Sie erlauben
+## Komodo-Resources (Repos, Stacks, Syncs) den Zugriff auf private Git-Repos.
+
+[[git_provider]]
+domain = "{{ komodo_git_provider }}"
+accounts = [
+  { username = "{{ komodo_git_account }}", token = "{{ komodo_github_token }}" },
+]

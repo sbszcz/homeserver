@@ -39,6 +39,14 @@
     group: "{{ host_user }}"
     mode: "0600"
 
+- name: Template komodo core config file
+  ansible.builtin.template:
+    src: core.config.toml
+    dest: "{{ komodo_data_dir }}/core.config.toml"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0600"
+
 - name: Deploy komodo stack
   community.docker.docker_compose_v2:
     project_name: komodo
@@ -48,3 +56,6 @@
     env_files:
       - compose.env
     state: present
+
+- name: Bootstrap komodo resource sync '{{ komodo_sync_name }}'
+  ansible.builtin.include_tasks: create_resource_sync.yml
