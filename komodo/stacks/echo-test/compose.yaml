@@ -23,5 +23,5 @@ services:
         env | sort
         while true; do
           echo "[$$(date '+%H:%M:%S')] ping ..."
-          sleep 10
+          sleep 60
         done
