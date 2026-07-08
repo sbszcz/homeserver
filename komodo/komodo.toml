@@ -16,4 +16,5 @@ run_directory = "komodo/stacks/echo-test"
 file_paths = ["compose.yaml"]
 environment = """
 TZ=Europe/Berlin
+EXAMPLE_SECRET=[[EXAMPLE_SECRET]]
 """
