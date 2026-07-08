@@ -11,7 +11,9 @@ services:
       - {{ komodo_data_dir }}/mongo/config:/data/configdb
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DATABASE_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DATABASE_PASSWORD}
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
 
   core:
     image: ghcr.io/moghtech/komodo-core:${COMPOSE_KOMODO_IMAGE_TAG:-2}
@@ -24,10 +26,19 @@ services:
     env_file: ./compose.env
     environment:
       KOMODO_DATABASE_ADDRESS: mongo:27017
+      KOMODO_DATABASE_PASSWORD_FILE: /run/secrets/db_password
+      KOMODO_JWT_SECRET_FILE: /run/secrets/jwt_secret
+      KOMODO_WEBHOOK_SECRET_FILE: /run/secrets/webhook_secret
+      KOMODO_INIT_ADMIN_PASSWORD_FILE: /run/secrets/init_admin_password
     volumes:
       - {{ komodo_data_dir }}/keys:/config/keys
       - {{ komodo_data_dir }}/backups:/backups
       - {{ komodo_data_dir }}/core.config.toml:/config/config.toml
+    secrets:
+      - db_password
+      - jwt_secret
+      - webhook_secret
+      - init_admin_password
 
   periphery:
     image: ghcr.io/moghtech/komodo-periphery:${COMPOSE_KOMODO_IMAGE_TAG:-2}
@@ -41,3 +52,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc:/proc
       - {{ komodo_root_directory }}:{{ komodo_root_directory }}
+
+secrets:
+  db_password:
+    file: ./secrets/db_password
+  jwt_secret:
+    file: ./secrets/jwt_secret
+  webhook_secret:
+    file: ./secrets/webhook_secret
+  init_admin_password:
+    file: ./secrets/init_admin_password

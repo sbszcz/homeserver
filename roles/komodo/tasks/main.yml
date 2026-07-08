@@ -23,6 +23,40 @@
   loop_control:
     loop_var: sub_directory
 
+- name: Create komodo secrets folder
+  ansible.builtin.file:
+    path: "{{ komodo_secrets_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Write komodo docker secrets
+  ansible.builtin.copy:
+    content: "{{ secret_item.value }}"
+    dest: "{{ komodo_secrets_dir }}/{{ secret_item.name }}"
+    owner: root
+    group: root
+    mode: "{{ secret_item.mode }}"
+  no_log: true
+  loop:
+    # db_password wird auch vom mongo-Container (User 'mongodb', uid 999) gelesen,
+    # daher 0644. Der Host-Schutz bleibt ueber das 0700-root-Verzeichnis erhalten.
+    - name: db_password
+      value: "{{ komodo_database_password }}"
+      mode: "0644"
+    - name: jwt_secret
+      value: "{{ komodo_jwt_secret }}"
+      mode: "0600"
+    - name: webhook_secret
+      value: "{{ komodo_webhook_secret }}"
+      mode: "0600"
+    - name: init_admin_password
+      value: "{{ komodo_init_admin_password }}"
+      mode: "0600"
+  loop_control:
+    loop_var: secret_item
+
 - name: Template komodo compose file
   ansible.builtin.template:
     src: compose.yaml
@@ -35,16 +69,16 @@
   ansible.builtin.template:
     src: compose.env
     dest: "{{ komodo_data_dir }}/compose.env"
-    owner: "{{ host_user }}"
-    group: "{{ host_user }}"
+    owner: root
+    group: root
     mode: "0600"
 
 - name: Template komodo core config file
   ansible.builtin.template:
     src: core.config.toml
     dest: "{{ komodo_data_dir }}/core.config.toml"
-    owner: "{{ host_user }}"
-    group: "{{ host_user }}"
+    owner: root
+    group: root
     mode: "0600"
 
 - name: Deploy komodo stack
