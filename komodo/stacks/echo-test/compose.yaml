@@ -9,7 +9,7 @@ services:
     environment:
       PLAIN_VAR: "pain-var-compose-yaml"
       FROM_KOMODO_ENV: "${EXAMPLE_ENV_VAR}"
-      EXAMPLE_SECRET: "${EXAMPLE_SECRET}"
+      EXAMPLE_SECRET: "[[EXAMPLE_SECRET]]"
     command:
       - sh
       - -c
