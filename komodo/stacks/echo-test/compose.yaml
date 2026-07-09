@@ -20,8 +20,3 @@ services:
         echo "EXAMPLE_SECRET  = $$EXAMPLE_SECRET"
         echo "FROM_ENV_FILE   = $$FROM_ENV_FILE"
         echo "--- Komplettes Environment ---"
-        env | sort
-        while true; do
-          echo "[$$(date '+%H:%M:%S')] ping ..."
-          sleep 60
-        done

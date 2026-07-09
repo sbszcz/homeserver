@@ -18,3 +18,13 @@ environment = """
 TZ=Europe/Berlin
 EXAMPLE_SECRET=[[EXAMPLE_SECRET]]
 """
+
+[[stack]]
+name = "mosquitto"
+deploy = true
+[stack.config]
+server = "homie"
+poll_for_updates = true
+linked_repo = "homeserver"
+run_directory = "komodo/stacks/mosquitto"
+file_paths = ["compose.yaml"]

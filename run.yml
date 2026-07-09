@@ -12,11 +12,11 @@
 
     - role: docker
 
-    - role: portainer
+    # - role: portainer
     - role: komodo
 
     - role: homeassistant_stack
-    - role: pihole_stack
-    - role: mosquitto_stack
+    # - role: pihole_stack
+    # - role: mosquitto_stack
     - role: immich_stack
     - role: paperless_stack

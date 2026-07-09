@@ -11,3 +11,9 @@ domain = "{{ komodo_git_provider }}"
 accounts = [
   { username = "{{ komodo_git_account }}", token = "{{ komodo_github_token }}" },
 ]
+
+## Disables the confirm dialogs on all actions. All buttons will now be double-click.
+## Useful when only having http connection to core, as UI quick-copy button won't work.
+## Env: KOMODO_DISABLE_CONFIRM_DIALOG
+## Default: false
+disable_confirm_dialog = true
