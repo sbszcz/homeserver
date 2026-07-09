@@ -1,0 +1,76 @@
+---
+- name: Create paperless group
+  ansible.builtin.group:
+    name: paperless
+    gid: "{{ paperless_gid }}"
+
+- name: Create paperless user
+  ansible.builtin.user:
+    name: paperless
+    uid: "{{ paperless_uid }}"
+    group: paperless
+    create_home: false
+    system: false
+
+- name: "Ensure paperless mount point exists"
+  ansible.builtin.file:
+    path: "{{ paperless_nfs_mount }}"
+    state: directory
+    owner: paperless
+    group: paperless
+    mode: "0755"
+
+- name: Mount NFS diskstation paperless folder
+  ansible.posix.mount:
+    path: "{{ paperless_nfs_mount }}"
+    src: "{{ paperless_nfs_src }}"
+    fstype: nfs
+    opts: "rw,hard,_netdev,noatime,vers=3,x-systemd.automount,x-systemd.idle-timeout=600,timeo=600,retrans=10"
+    state: mounted
+  become: true
+  notify: Reload systemd
+
+- name: "Create paperless data folder"
+  ansible.builtin.file:
+    path: "{{ paperless_data_dir }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Create paperless sub folders"
+  ansible.builtin.file:
+    path: "{{ paperless_data_dir }}/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - consume
+    - export
+  loop_control:
+    loop_var: sub_directory
+
+- name: "Create paperless secrets folder"
+  ansible.builtin.file:
+    path: "{{ paperless_secrets_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: "Write paperless postgres docker secrets"
+  ansible.builtin.copy:
+    content: "{{ secret_item.value }}"
+    dest: "{{ paperless_secrets_dir }}/{{ secret_item.name }}"
+    owner: root
+    group: root
+    mode: "0644"
+  no_log: true
+  loop:
+    - name: postgres_user
+      value: "{{ paperless_db_user }}"
+    - name: postgres_password
+      value: "{{ paperless_db_password }}"
+  loop_control:
+    loop_var: secret_item

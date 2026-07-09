@@ -93,6 +93,19 @@ Diese generischen Namen sind bewusst ohne Rollen-Präfix (siehe `.ansible-lint`)
 - Nicht-geheime, projektweite Werte gehören nach `group_vars/all/common.yml`.
 - Der Vault-Schlüssel wird zur Laufzeit über `vault-key.sh` bereitgestellt
   (nicht eingecheckt).
+- **Secrets in Containern nach Möglichkeit immer über die Docker-Compose-`secrets`-
+  Variante mit `_FILE`-Umgebungsvariablen einbinden** – nicht als Klartext-Wert in
+  `environment`. Muster (analog zur Komodo-Installation, `roles/komodo`):
+  - Im Compose-Template einen `secrets:`-Block mit `file:`-Quelle definieren und den
+    Diensten per `secrets:`-Liste zuweisen.
+  - Im Container die zugehörige `<NAME>_FILE`-Variable auf `/run/secrets/<name>`
+    setzen (z. B. `POSTGRES_PASSWORD_FILE`, `PAPERLESS_DBPASS_FILE`), sofern das
+    Image diese `_FILE`-Konvention unterstützt.
+  - Die Secret-Dateien schreibt Ansible aus dem Vault auf den Host (Task-Muster
+    `Write <stack> docker secrets`): `owner`/`group` `root`, das Secrets-Verzeichnis
+    mit `mode: "0700"`, die Dateien mit `no_log: true`.
+  - Nur wenn ein Image die `_FILE`-Konvention nicht unterstützt, ausnahmsweise auf
+    eine Klartext-`environment`-Variable ausweichen (Secret weiterhin aus dem Vault).
 
 
 ## Ausführung und Validierung

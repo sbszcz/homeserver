@@ -5,3 +5,5 @@ portainer_api_url: "http://localhost:9000"
 komodo_api_url: "http://localhost:9120"
 komodo_host: "http://homie:9120"
 komodo_first_server_name: "homie"
+
+paperless_db_user: paperless

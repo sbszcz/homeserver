@@ -1,0 +1,7 @@
+---
+paperless_uid: 1001
+paperless_gid: 1001
+paperless_nfs_mount: /mnt/diskstation/paperless
+paperless_nfs_src: "diskstation:/volume1/paperless"
+paperless_data_dir: "/home/{{ host_user }}/{{ container_data }}/paperless"
+paperless_secrets_dir: "/home/{{ host_user }}/{{ container_data }}/paperless/secrets"
