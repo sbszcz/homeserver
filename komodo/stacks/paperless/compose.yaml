@@ -1,0 +1,58 @@
+# Migriert von Portainer nach Komodo.
+# Postgres-Zugangsdaten werden ueber Docker-Compose-Secrets (_FILE) bereitgestellt.
+# Die Secret-Dateien schreibt die Ansible-Rolle 'paperless_prepare' aus dem Vault
+# auf den Host (analog zur Komodo-Installation, roles/komodo).
+services:
+  broker:
+    image: docker.io/library/redis:8
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+  db:
+    image: docker.io/library/postgres:18
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER_FILE: /run/secrets/postgres_user
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_user
+      - postgres_password
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+    ports:
+      - "8010:8000"
+    volumes:
+      - data:/usr/src/paperless/data
+      - /mnt/diskstation/paperless/media:/usr/src/paperless/media
+      - /container_data/paperless/export:/usr/src/paperless/export
+      - /container_data/paperless/consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER_FILE: /run/secrets/postgres_user
+      PAPERLESS_DBPASS_FILE: /run/secrets/postgres_password
+      USERMAP_UID: 1001
+      USERMAP_GID: 1001
+      PAPERLESS_TIME_ZONE: "Europe/Berlin"
+      PAPERLESS_OCR_LANGUAGE: deu
+      PAPERLESS_CONSUMER_INOTIFY_DELAY: 15
+      PAPERLESS_FILENAME_FORMAT: "{created_year}/{title}"
+    secrets:
+      - postgres_user
+      - postgres_password
+secrets:
+  postgres_user:
+    file: /container_data/paperless/secrets/postgres_user
+  postgres_password:
+    file: /container_data/paperless/secrets/postgres_password
+volumes:
+  data:
+  pgdata:
+  redisdata:

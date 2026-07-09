@@ -28,3 +28,13 @@ poll_for_updates = true
 linked_repo = "homeserver"
 run_directory = "komodo/stacks/mosquitto"
 file_paths = ["compose.yaml"]
+
+[[stack]]
+name = "paperless"
+deploy = true
+[stack.config]
+server = "homie"
+poll_for_updates = true
+linked_repo = "homeserver"
+run_directory = "komodo/stacks/paperless"
+file_paths = ["compose.yaml"]
