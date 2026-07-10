@@ -6,20 +6,6 @@ git_account = "sbszcz"
 repo = "sbszcz/homeserver"
 
 [[stack]]
-name = "echo-test"
-deploy = true
-[stack.config]
-server = "homie"
-poll_for_updates = true
-linked_repo = "homeserver"
-run_directory = "komodo/stacks/echo-test"
-file_paths = ["compose.yaml"]
-environment = """
-TZ=Europe/Berlin
-EXAMPLE_SECRET=[[EXAMPLE_SECRET]]
-"""
-
-[[stack]]
 name = "mosquitto"
 deploy = true
 [stack.config]
@@ -37,4 +23,14 @@ server = "homie"
 poll_for_updates = true
 linked_repo = "homeserver"
 run_directory = "komodo/stacks/paperless"
+file_paths = ["compose.yaml"]
+
+[[stack]]
+name = "homeassistant"
+deploy = true
+[stack.config]
+server = "homie"
+poll_for_updates = true
+linked_repo = "homeserver"
+run_directory = "komodo/stacks/homeassistant"
 file_paths = ["compose.yaml"]

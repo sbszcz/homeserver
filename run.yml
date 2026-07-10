@@ -14,7 +14,7 @@
 
     # - role: portainer
     - role: paperless_prepare
+    - role: homeassistant_prepare
     - role: komodo
 
-    - role: homeassistant_stack
     - role: immich_stack

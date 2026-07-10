@@ -1,0 +1,20 @@
+---
+- name: "Setup folder for stack"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/homeassistant"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Setup sub folders"
+  ansible.builtin.file:
+    path: "/home/{{ host_user }}/{{ container_data }}/homeassistant/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - config
+  loop_control:
+    loop_var: sub_directory
