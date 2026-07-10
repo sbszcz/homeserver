@@ -12,9 +12,8 @@
 
     - role: docker
 
-    # - role: portainer
     - role: paperless_prepare
     - role: homeassistant_prepare
-    - role: komodo
+    - role: immich_prepare
 
-    - role: immich_stack
+    - role: komodo

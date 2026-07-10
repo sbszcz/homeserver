@@ -34,3 +34,13 @@ poll_for_updates = true
 linked_repo = "homeserver"
 run_directory = "komodo/stacks/homeassistant"
 file_paths = ["compose.yaml"]
+
+[[stack]]
+name = "immich"
+deploy = true
+[stack.config]
+server = "homie"
+poll_for_updates = true
+linked_repo = "homeserver"
+run_directory = "komodo/stacks/immich"
+file_paths = ["compose.yaml"]

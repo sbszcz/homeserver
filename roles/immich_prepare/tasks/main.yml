@@ -1,0 +1,79 @@
+---
+- name: "Ensure photos mount point exists"
+  ansible.builtin.file:
+    path: "{{ immich_photos_nfs_mount }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Ensure immich mount point exists"
+  ansible.builtin.file:
+    path: "{{ immich_nfs_mount }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: Mount NFS diskstation photos folder
+  ansible.posix.mount:
+    path: "{{ immich_photos_nfs_mount }}"
+    src: "{{ immich_photos_nfs_src }}"
+    fstype: nfs
+    opts: "{{ nfs_mount_opts }}"
+    state: mounted
+  become: true
+  notify: Reload systemd
+
+- name: Mount NFS diskstation immich folder
+  ansible.posix.mount:
+    path: "{{ immich_nfs_mount }}"
+    src: "{{ immich_nfs_src }}"
+    fstype: nfs
+    opts: "{{ nfs_mount_opts }}"
+    state: mounted
+  become: true
+  notify: Reload systemd
+
+- name: "Create immich data folder"
+  ansible.builtin.file:
+    path: "{{ immich_data_dir }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Create immich sub folders"
+  ansible.builtin.file:
+    path: "{{ immich_data_dir }}/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - library
+    - postgres_data
+  loop_control:
+    loop_var: sub_directory
+
+- name: "Create immich secrets folder"
+  ansible.builtin.file:
+    path: "{{ immich_secrets_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: "Write immich postgres docker secrets"
+  ansible.builtin.copy:
+    content: "{{ secret_item.value }}"
+    dest: "{{ immich_secrets_dir }}/{{ secret_item.name }}"
+    owner: root
+    group: root
+    mode: "0644"
+  no_log: true
+  loop:
+    - name: db_password
+      value: "{{ immich_db_password }}"
+  loop_control:
+    loop_var: secret_item

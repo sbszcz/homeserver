@@ -1,0 +1,7 @@
+---
+immich_photos_nfs_mount: /mnt/diskstation/photos
+immich_photos_nfs_src: "diskstation:/volume1/photo"
+immich_nfs_mount: /mnt/diskstation/immich
+immich_nfs_src: "diskstation:/volume1/immich"
+immich_data_dir: "/home/{{ host_user }}/{{ container_data }}/immich"
+immich_secrets_dir: "/home/{{ host_user }}/{{ container_data }}/immich/secrets"
