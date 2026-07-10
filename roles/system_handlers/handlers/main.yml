@@ -3,3 +3,8 @@
   ansible.builtin.systemd:
     daemon_reload: true
   become: true
+
+- name: Restart systemd-resolved
+  ansible.builtin.systemd:
+    name: systemd-resolved
+    state: restarted

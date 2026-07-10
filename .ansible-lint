@@ -1,8 +1,8 @@
 ---
 # Ansible-lint configuration
 
-# Skip var-naming rule for stack_name and stack_compose variables
-# These are intentionally generic as they're part of a shared interface
-# pattern used across multiple stack roles with portainer_stacks
+# Skip var-naming rule for generic, shared interface variables (e.g. stack_name)
+# These are intentionally without a role prefix because they are part of a
+# shared interface pattern used across roles.
 skip_list:
   - var-naming[no-role-prefix]
