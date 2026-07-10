@@ -25,7 +25,7 @@
     path: "{{ paperless_nfs_mount }}"
     src: "{{ paperless_nfs_src }}"
     fstype: nfs
-    opts: "rw,hard,_netdev,noatime,vers=3,x-systemd.automount,x-systemd.idle-timeout=600,timeo=600,retrans=10"
+    opts: "{{ nfs_mount_opts }}"
     state: mounted
   become: true
   notify: Reload systemd

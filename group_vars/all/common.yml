@@ -7,3 +7,5 @@ komodo_host: "http://homie:9120"
 komodo_first_server_name: "homie"
 
 paperless_db_user: paperless
+
+nfs_mount_opts: "rw,hard,_netdev,noatime,vers=3,x-systemd.automount,x-systemd.idle-timeout=600,timeo=600,retrans=10"

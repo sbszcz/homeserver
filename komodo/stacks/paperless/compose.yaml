@@ -1,7 +1,3 @@
-# Migriert von Portainer nach Komodo.
-# Postgres-Zugangsdaten werden ueber Docker-Compose-Secrets (_FILE) bereitgestellt.
-# Die Secret-Dateien schreibt die Ansible-Rolle 'paperless_prepare' aus dem Vault
-# auf den Host (analog zur Komodo-Installation, roles/komodo).
 services:
   broker:
     image: docker.io/library/redis:8
