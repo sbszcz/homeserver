@@ -25,3 +25,7 @@ run = 'pipx run ansible-lint'
 [tasks.facts]
 description = 'Show ansible facts'
 run = 'ansible-playbook -i inventory.yml test.yml --ask-become-pass --vault-pass-file vault-key.sh'
+
+[tasks.bcrypt]
+description = 'bcrypt hash erzeugen (AdGuard pw hash)'
+run = 'mkpasswd -m bcrypt -R 12'

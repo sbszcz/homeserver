@@ -1,0 +1,6 @@
+---
+adguard_data_dir: "/home/{{ host_user }}/{{ container_data }}/adguard"
+adguard_conf_dir: "/home/{{ host_user }}/{{ container_data }}/adguard/conf"
+adguard_base_domain: "{{ reverse_proxy_base_domain }}"
+adguard_host_ip: "{{ homie_ip }}"
+adguard_upstream_dns: "192.168.178.1"

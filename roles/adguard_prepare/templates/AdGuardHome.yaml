@@ -1,0 +1,39 @@
+---
+http:
+  address: 0.0.0.0:3000
+  session_ttl: 720h
+users:
+  - name: {{ adguard_admin_user }}
+    password: {{ adguard_admin_password_hash }}
+auth_attempts: 5
+block_auth_min: 15
+language: en
+theme: auto
+dns:
+  bind_hosts:
+    - 0.0.0.0
+  port: 53
+  ratelimit: 20
+  upstream_dns:
+    - {{ adguard_upstream_dns }}
+  bootstrap_dns:
+    - {{ adguard_upstream_dns }}
+  upstream_mode: load_balance
+  cache_size: 4194304
+filtering:
+  rewrites:
+    - domain: {{ adguard_base_domain }}
+      answer: {{ adguard_host_ip }}
+    - domain: '*.{{ adguard_base_domain }}'
+      answer: {{ adguard_host_ip }}
+  filtering_enabled: true
+  protection_enabled: true
+filters: []
+whitelist_filters: []
+user_rules: []
+dhcp:
+  enabled: false
+log:
+  enabled: true
+  verbose: false
+schema_version: 27

@@ -1,0 +1,47 @@
+---
+- name: Modify resolved.conf to disable DNSStubListener
+  ansible.builtin.replace:
+    path: /etc/systemd/resolved.conf
+    regexp: "^#?DNSStubListener=.*"
+    replace: "DNSStubListener=no"
+    backup: true
+  notify: Restart systemd-resolved
+
+- name: Ensure resolv.conf symlink exists
+  ansible.builtin.file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+  notify: Restart systemd-resolved
+
+- name: "Create adguard data folder"
+  ansible.builtin.file:
+    path: "{{ adguard_data_dir }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+
+- name: "Create adguard sub folders"
+  ansible.builtin.file:
+    path: "{{ adguard_data_dir }}/{{ sub_directory }}"
+    state: directory
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0755"
+  loop:
+    - work
+    - conf
+  loop_control:
+    loop_var: sub_directory
+
+- name: "Seed initial AdGuardHome.yaml (only if not present)"
+  ansible.builtin.template:
+    src: AdGuardHome.yaml
+    dest: "{{ adguard_conf_dir }}/AdGuardHome.yaml"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0644"
+    force: false
+  no_log: true
