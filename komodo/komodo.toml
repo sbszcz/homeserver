@@ -85,6 +85,7 @@ name = "apprise"
 enabled = true
 endpoint.type = "Custom"
 endpoint.params.url = "http://homie:7000"
+alert_types = ["StackImageUpdateAvailable"]
 
 # Caddy erst aktivieren, nachdem AdGuard als DNS in der FritzBox eingetragen
 # und *.homie.box aufloest. Zum Aktivieren die folgenden Zeilen entkommentieren.
