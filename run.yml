@@ -16,6 +16,6 @@
     - role: homeassistant_prepare
     - role: immich_prepare
     - role: adguard_prepare
-      tags: adguard
+    - role: apprise_prepare
 
     - role: komodo
