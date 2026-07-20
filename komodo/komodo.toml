@@ -55,6 +55,16 @@ linked_repo = "homeserver"
 run_directory = "komodo/stacks/adguard"
 file_paths = ["compose.yaml"]
 
+[[stack]]
+name = "apprise"
+deploy = true
+[stack.config]
+server = "homie"
+poll_for_updates = true
+linked_repo = "homeserver"
+run_directory = "komodo/stacks/apprise"
+file_paths = ["compose.yaml"]
+
 # Caddy erst aktivieren, nachdem AdGuard als DNS in der FritzBox eingetragen
 # und *.homie.box aufloest. Zum Aktivieren die folgenden Zeilen entkommentieren.
 [[stack]]
