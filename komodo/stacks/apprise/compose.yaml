@@ -9,5 +9,5 @@ services:
       APPRISE_WORKER_COUNT: 1
       APPRISE_ADMIN: "y"
     volumes:
-      - ./config:/config
-      - ./attach:/attach
+      - /container_data/apprise/config:/config
+      - /container_data/apprise/attach:/attach
