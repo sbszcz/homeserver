@@ -65,6 +65,27 @@ linked_repo = "homeserver"
 run_directory = "komodo/stacks/apprise"
 file_paths = ["compose.yaml"]
 
+[[stack]]
+name = "komodo-apprise-alerter"
+deploy = true
+[stack.config]
+server = "homie"
+poll_for_updates = true
+linked_repo = "homeserver"
+run_directory = "komodo/stacks/komodo_apprise_alerter"
+file_paths = ["compose.yaml"]
+environment = """
+  APPRISE_HOST=homie:8000
+  APPRISE_STATELESS_URLS=[[APPRISE_EMAIL_PROVIDER_URL]]
+"""
+
+[[alerter]]
+name = "apprise"
+[alerter.config]
+enabled = true
+endpoint.type = "Custom"
+endpoint.params.url = "http://homie:7000"
+
 # Caddy erst aktivieren, nachdem AdGuard als DNS in der FritzBox eingetragen
 # und *.homie.box aufloest. Zum Aktivieren die folgenden Zeilen entkommentieren.
 [[stack]]
