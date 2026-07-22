@@ -75,7 +75,7 @@ linked_repo = "homeserver"
 run_directory = "komodo/stacks/komodo_apprise_alerter"
 file_paths = ["compose.yaml"]
 environment = """
-  APPRISE_HOST=homie:8000
+  APPRISE_HOST=192.168.178.31:8000
   APPRISE_STATELESS_URLS=[[APPRISE_EMAIL_PROVIDER_URL]]
 """
 
