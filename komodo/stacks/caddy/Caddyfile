@@ -13,3 +13,7 @@ http://homeassistant.homie.box {
 http://adguard.homie.box {
 	reverse_proxy host.docker.internal:3000
 }
+
+http://komodo.homie.box {
+    reverse_proxy host.docker.internal:9120
+}
