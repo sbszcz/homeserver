@@ -24,6 +24,9 @@ poll_for_updates = true
 linked_repo = "homeserver"
 run_directory = "komodo/stacks/paperless"
 file_paths = ["compose.yaml"]
+environment = """
+  PAPERLESS_SECRET_KEY=[[PAPERLESS_SECRET_KEY]]
+"""
 
 [[stack]]
 name = "homeassistant"
