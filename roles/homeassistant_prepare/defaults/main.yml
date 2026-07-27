@@ -1,0 +1,7 @@
+---
+homeassistant_data_dir: "/home/{{ host_user }}/{{ container_data }}/homeassistant"
+homeassistant_config_dir: "/home/{{ host_user }}/{{ container_data }}/homeassistant/config"
+homeassistant_trusted_proxies:
+  - 127.0.0.1
+  - ::1
+  - 172.16.0.0/12

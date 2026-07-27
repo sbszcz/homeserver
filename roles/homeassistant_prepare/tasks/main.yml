@@ -1,7 +1,7 @@
 ---
 - name: "Setup folder for stack"
   ansible.builtin.file:
-    path: "/home/{{ host_user }}/{{ container_data }}/homeassistant"
+    path: "{{ homeassistant_data_dir }}"
     state: directory
     owner: "{{ host_user }}"
     group: "{{ host_user }}"
@@ -9,7 +9,7 @@
 
 - name: "Setup sub folders"
   ansible.builtin.file:
-    path: "/home/{{ host_user }}/{{ container_data }}/homeassistant/{{ sub_directory }}"
+    path: "{{ homeassistant_data_dir }}/{{ sub_directory }}"
     state: directory
     owner: "{{ host_user }}"
     group: "{{ host_user }}"
@@ -18,3 +18,27 @@
     - config
   loop_control:
     loop_var: sub_directory
+
+- name: "Manage Home Assistant configuration.yaml"
+  ansible.builtin.template:
+    src: configuration.yaml
+    dest: "{{ homeassistant_config_dir }}/configuration.yaml"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0644"
+    force: true
+
+- name: "Seed Home Assistant include files (only if not present)"
+  ansible.builtin.copy:
+    content: "[]\n"
+    dest: "{{ homeassistant_config_dir }}/{{ include_file }}"
+    owner: "{{ host_user }}"
+    group: "{{ host_user }}"
+    mode: "0644"
+    force: false
+  loop:
+    - automations.yaml
+    - scripts.yaml
+    - scenes.yaml
+  loop_control:
+    loop_var: include_file
