@@ -40,6 +40,7 @@ services:
       PAPERLESS_OCR_LANGUAGE: deu
       PAPERLESS_CONSUMER_INOTIFY_DELAY: 15
       PAPERLESS_FILENAME_FORMAT: "{created_year}/{title}"
+      PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
     secrets:
       - postgres_user
       - postgres_password
