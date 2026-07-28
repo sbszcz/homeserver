@@ -17,7 +17,7 @@ services:
       - postgres_user
       - postgres_password
   webserver:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.20
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
     restart: unless-stopped
     depends_on:
       - db
