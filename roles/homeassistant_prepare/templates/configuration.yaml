@@ -13,9 +13,11 @@ homeassistant:
   allowlist_external_dirs:
     - /config/camshots
 
-http:
-    use_x_forwarded_for: true
-    trusted_proxies:
-{% for proxy in homeassistant_trusted_proxies %}
-        - {{ proxy }}
-{% endfor %}
+# Obsolete since homeassistant-core 2026.8.2 (configured via UI: System > Netzerk)
+#
+# http:
+#     use_x_forwarded_for: true
+#     trusted_proxies:
+# {% for proxy in homeassistant_trusted_proxies %}
+#         - {{ proxy }}
+# {% endfor %}
