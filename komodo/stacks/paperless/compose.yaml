@@ -26,7 +26,9 @@ services:
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
   tika:
-    image: docker.io/apache/tika:latest
+    # Auf Tika 3.x gepinnt: Tika 4.x hat den Multipart-Endpunkt /tika/form
+    # entfernt, den Paperless (tika-client) nutzt -> 404 beim Parsen.
+    image: docker.io/apache/tika:3.3.1.0
     restart: unless-stopped
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
