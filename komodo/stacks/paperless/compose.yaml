@@ -16,12 +16,26 @@ services:
     secrets:
       - postgres_user
       - postgres_password
+  gotenberg:
+    image: docker.io/gotenberg/gotenberg:8
+    restart: unless-stopped
+    # Chromium wird für die .eml-Konvertierung genutzt – externe Inhalte
+    # (Tracking-Pixel, JavaScript) bewusst unterbinden.
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+  tika:
+    image: docker.io/apache/tika:latest
+    restart: unless-stopped
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     restart: unless-stopped
     depends_on:
       - db
       - broker
+      - gotenberg
+      - tika
     ports:
       - "8010:8000"
     volumes:
@@ -41,6 +55,9 @@ services:
       PAPERLESS_CONSUMER_INOTIFY_DELAY: 15
       PAPERLESS_FILENAME_FORMAT: "{created_year}/{title}"
       PAPERLESS_SECRET_KEY: "${PAPERLESS_SECRET_KEY}"
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
     secrets:
       - postgres_user
       - postgres_password
